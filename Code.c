@@ -36,7 +36,7 @@ BOOL CodeInjection(DWORD dwPID) {
         strcpy_s(param.pStr[0], 100, "user32.dll");
         strcpy_s(param.pStr[1], 100, "MessageBoxA");
         strcpy_s(param.pStr[2], 100, "Code Injected!");
-        strcpy_s(param.pStr[3], 100, "Injection");
+        strcpy_s(param.pStr[3], 100, "Alert");
 
         HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPID);
 
