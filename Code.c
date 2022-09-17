@@ -31,17 +31,10 @@ BOOL CodeInjection(DWORD dwPID) {
     if (hMod) {
         param.pFunc[0] = GetProcAddress(hMod, "LoadLibraryA");
         param.pFunc[1] = GetProcAddress(hMod, "GetProcAddress");
-
-<<<<<<< HEAD
         strcpy_s(param.pStr[0], 100, "user32.dll");
         strcpy_s(param.pStr[1], 100, "MessageBoxA");
         strcpy_s(param.pStr[2], 100, "Code Injected!");
         strcpy_s(param.pStr[3], 100, "Alert");
-=======
-        strcpy_s(param.pStr[0], 100, "kernel32.dll");
-        strcpy_s(param.pStr[1], 100, "WinExec");
-        strcpy_s(param.pStr[2], 100, "calc.exe");
->>>>>>> 343ecf1bc59d34bb8b00d7f3255bd04c21580e05
 
         HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPID);
 
